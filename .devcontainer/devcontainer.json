@@ -1,0 +1,9 @@
+{
+    "name": "app",
+    "dockerComposeFile": [
+        "../docker-compose.yaml"
+    ],
+    "service": "app",
+    "workspaceFolder": "/usr/app",
+    "remoteUser": "root"
+}
