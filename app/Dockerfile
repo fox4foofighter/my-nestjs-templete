@@ -7,11 +7,10 @@ COPY . .
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 
-RUN if [ "$NODE_ENV" = "production" ]; then npm install ; fi
-RUN if [ "$NODE_ENV" = "production" ]; then npm run build; fi
-
 RUN if [ "$NODE_ENV" != "production" ]; then npm install -g @nestjs/cli; fi
-RUN if [ "$NODE_ENV" != "production" ]; then npm install; fi
+
+RUN npm install
+RUN npm run build
 
 EXPOSE 3000
 
