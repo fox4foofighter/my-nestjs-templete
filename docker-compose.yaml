@@ -1,0 +1,61 @@
+services:
+  app:
+    container_name: myapp-app
+    build:
+      context: ./app
+      args:
+        - NODE_ENV=development
+    ports:
+      - 3000:3000
+    volumes:
+      - ./app:/usr/app
+    environment:
+      - NODE_ENV=development
+      - DDB_URI=mongodb://ddb:27017/myapp
+      - RDB_HOST=rdb
+      - RDB_TYPE=mysql
+      - RDB_PORT=3306
+      - RDB_DATABASE=myapp
+      - RDB_USER=root
+      - RDB_PASSWORD=root
+    depends_on:
+      - ddb
+      - rdb
+      - cache
+    networks:
+      - myapp-network
+
+  ddb:
+    image: mongo:latest
+    container_name: myapp-ddb
+    ports:
+      - 27017:27017
+    networks:
+      - myapp-network
+
+  rdb:
+    container_name: myapp-rdb
+    build: ./rdb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: conference
+    ports:
+      - 3306:3306
+    volumes:
+      - ./rdb/data:/var/lib/mysql
+    networks:
+      - myapp-network
+
+  cache:
+    container_name: myapp-cache
+    build: ./cache
+    ports:
+      - 6379:6379
+    volumes:
+      - ./cache/data:/data
+    networks:
+      - myapp-network
+
+networks:
+  myapp-network:
+    driver: bridge
